@@ -3,55 +3,86 @@ package com.example.peselverifier;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 
 public class Controller {
 
     private TextField enteringPesel;
     private String enteredPesel;
-    private Button btnVerify;
-    private Label peselVerificationInfo;
+    private Button btnVerify, btnFile;
+    private Label validTextField, verificatinInfo;
 
 
-    public Controller(TextField enteringPesel, Button btnVerify, Label peselVerificationInfo) {
+    public Controller(TextField enteringPesel, Button btnVerify, Button btnFile, Label validTextField, Label verificatinInfo) {
         this.enteringPesel = enteringPesel;
         this.btnVerify = btnVerify;
-        this.peselVerificationInfo = peselVerificationInfo;
+        this.btnFile = btnFile;
+        this.validTextField = validTextField;
+        this.verificatinInfo = verificatinInfo;
+
     }
 
     public void handleBtnByTypping() {// Obsługa kliknięcia przycisku btnByTyping
         enteringPesel.setVisible(true);
         btnVerify.setVisible(true);
-        verificationLabel();
+        verificationTextField();
     }
 
     public void handleBtnVerify() {// Obsługa kliknięcia przycisku BtnVerify
         enteredPesel = enteringPesel.getText(); // przypisanie do zmiennej tekstu wproadzonego w Label przez usera
-        Verification verification = new Verification(enteredPesel);
-        String result = verification.startVerification();
-        peselVerificationInfo.setVisible(true);
-        peselVerificationInfo.setText(result);
+        Pesel pesel = new Pesel(enteredPesel);
+        boolean result = pesel.verByPattern();
+        verificatinInfo.setVisible(true);
+        if (result){
+            verificatinInfo.setText("PESEL " + enteredPesel + " poprawny");
+            verificatinInfo.setTextFill(Color.GREEN);
+        }else {
+            verificatinInfo.setText("PESEL " + enteredPesel + " niepoprawny");
+            verificatinInfo.setTextFill(Color.RED);
+        }
+    }
 
 
+    public void handleBtnFile() {
+        enteringPesel.setVisible(false);
+        verificatinInfo.setVisible(false);
 
-        //System.out.println(result);
+        FileManager fileManager = new FileManager();
+        fileManager.checkFile();
+        fileManager.readFile();
+        fileManager.saveFile();
+        System.out.println("sciezka pliku to " + fileManager.getFileToSave().getAbsolutePath());
 
     }
 
-    public void verificationLabel(){
-
-
-        enteringPesel.textProperty().addListener((observable, oldValue, newValue) -> { // możliwość weryfikacji tylko 11 znakowego stringa
-            if (newValue.length() < 11){
+    public void verificationTextField() {
+        enteringPesel.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() < 11) {
                 btnVerify.setDisable(true);
-                peselVerificationInfo.setVisible(true);
-            } else if (newValue.length() > 11)  {
+                validTextField.setVisible(true);
+                validTextField.setText("Wprowadzony PESEL jest za krótki");
+            } else if (newValue.length() > 11) {
                 btnVerify.setDisable(true);
-                peselVerificationInfo.setVisible(true);
-                peselVerificationInfo.setText("Wprowadzony PESEL jest za długi");
-            }else {
+                validTextField.setVisible(true);
+                validTextField.setText("Wprowadzony PESEL jest za długi");
+            } else if (!isLongInt(newValue)) {
+                btnVerify.setDisable(true);
+                validTextField.setVisible(true);
+                validTextField.setText("Dozwolone tylko cyfry");
+            } else {
                 btnVerify.setDisable(false);
-                peselVerificationInfo.setVisible(false);
+                validTextField.setVisible(false);
             }
         });
+    }
+
+
+    private boolean isLongInt(String value) { // sprawdzenie czy String to tylko cyfry
+        try {
+            Long.parseLong(value); // jesli uda sie rzutować na Long to true
+            return true;
+        } catch (NumberFormatException e) { // w innym przypadku false
+            return false;
+        }
     }
 }
