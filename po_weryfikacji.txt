@@ -1,0 +1,10 @@
+erweges                  | błędny pesel, powód: za krótki
+4214215421               | błędny pesel, powód: za krótki
+54214r21d                | błędny pesel, powód: za krótki
+12521                    | błędny pesel, powód: za krótki
+51                       | błędny pesel, powód: za krótki
+25                       | błędny pesel, powód: za krótki
+21                       | błędny pesel, powód: za krótki
+3                        | błędny pesel, powód: za krótki
+41                       | błędny pesel, powód: za krótki
+54                       | błędny pesel, powód: za krótki

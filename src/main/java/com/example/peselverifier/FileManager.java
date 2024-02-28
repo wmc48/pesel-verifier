@@ -1,5 +1,6 @@
 package com.example.peselverifier;
 
+import javafx.scene.control.ListView;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +8,8 @@ import java.util.Scanner;
 
 public class FileManager {
 
-    private File fileToVer = new File("do_weryfikacji.txt");
-    private File fileToSave = new File("po_weryfikacji.txt");
+    private final File fileToVer = new File("do_weryfikacji.txt");
+    private final File fileToSave = new File("po_weryfikacji.txt");
     List<String> peselFromFile = new ArrayList<>();// do weryfikacji pliku,
     private String strPesel;
 
@@ -40,7 +41,7 @@ public class FileManager {
         }
     }
 
-    void saveFile() {
+    void saveFile(ListView listView) {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter("po_weryfikacji.txt");
@@ -48,23 +49,33 @@ public class FileManager {
             throw new RuntimeException(e);
         }
         System.out.println("Pozycje wypisane w pliku: " + peselFromFile.size());
+        List<String> verificatedList = new ArrayList<>();//lista na wyniki weryfikacji
 
-        for (int i = 0; i < peselFromFile.size(); i++) { // pętla pozwala zweryfikować każdą linię pliku
-
-            // a następnie zapisać wynik weryfikacji jako każdy nowy wiersz do pliku
-            strPesel = peselFromFile.get(i).trim(); // strPesel jako niezbędny argument do metody verificationPesel. w pętli przypisuje do siebie element listy a w następnej itereacji kolejny aż do końca listy
+        for (String row : peselFromFile) { // pętla pozwala zweryfikować każdą linię pliku
+            // a następnie zapisać wynik weryfikacji jako każdy nowy wiersz do pliku, oraz dodać wynik o listy weryfikacji aby wyświetlić to w listView
+            strPesel = row.trim(); // strPesel jako niezbędny argument do metody verificationPesel. w pętli przypisuje do siebie element listy a w następnej itereacji kolejny aż do końca listy
             Pesel pesel = new Pesel(strPesel);
+            String result;
             if (strPesel.length() > 11) {
-                writer.println(String.format("%-25s| błędny pesel, powód: za długi", strPesel));
+                result = String.format("%-25s| błędny pesel, powód: za długi", strPesel);
+                verificatedList.add(result);
             } else if (strPesel.length() < 11) {
-                writer.println(String.format("%-25s| błędny pesel, powód: za krótki", strPesel));
-            } else if (pesel.verByPattern()){
-                writer.println(String.format("%-25s| PESEL poprawny", strPesel));
+                result = String.format("%-25s| błędny pesel, powód: za krótki", strPesel);
+                verificatedList.add(result);
+                writer.println(result);
+            } else if (pesel.verByPattern()) {
+                result = String.format("%-25s| PESEL poprawny", strPesel);
+                verificatedList.add(result);
+                writer.println(result);
                 //peselFromFile.set(i, pesel.verByPattern()); // przypisanie do listy nowo utworzonych, finalnych stringów
             } else {
-                writer.println(String.format("%-25s| błędny pesel", strPesel));
+                result = String.format("%-25s| błędny pesel", strPesel);
+                verificatedList.add(result);
+                writer.println(result);
             }
         }
+
+        listView.getItems().addAll(verificatedList);
         writer.close(); // zamyka zapis pliku. niezbędne do udanego zapisu
     }
 

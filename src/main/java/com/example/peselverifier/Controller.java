@@ -2,41 +2,47 @@ package com.example.peselverifier;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 
 public class Controller {
 
-    private TextField enteringPesel;
-    private String enteredPesel;
-    private Button btnVerify, btnFile;
-    private Label validTextField, verificatinInfo;
+    private final TextField enteringPesel;
+    private final Button btnVerify, btnFile, btnVerFile;
+    private final Label validTextField, verificatinInfo, verFileInfo;
+    private ListView list;
 
-
-    public Controller(TextField enteringPesel, Button btnVerify, Button btnFile, Label validTextField, Label verificatinInfo) {
+    public Controller(TextField enteringPesel, Button btnVerify, Button btnFile, Label validTextField, Label verificatinInfo, Button btnVerFile, Label verFileInfo, ListView list) {
         this.enteringPesel = enteringPesel;
         this.btnVerify = btnVerify;
         this.btnFile = btnFile;
         this.validTextField = validTextField;
         this.verificatinInfo = verificatinInfo;
+        this.btnVerFile = btnVerFile;
+        this.verFileInfo = verFileInfo;
+        this.list = list;
 
     }
 
     public void handleBtnByTypping() {// Obsługa kliknięcia przycisku btnByTyping
         enteringPesel.setVisible(true);
         btnVerify.setVisible(true);
+        verFileInfo.setVisible(false);
+        btnVerFile.setVisible(false);
+        list.setVisible(false);
         verificationTextField();
     }
 
     public void handleBtnVerify() {// Obsługa kliknięcia przycisku BtnVerify
-        enteredPesel = enteringPesel.getText(); // przypisanie do zmiennej tekstu wproadzonego w Label przez usera
+        String enteredPesel = enteringPesel.getText(); // przypisanie do zmiennej tekstu wproadzonego w Label przez usera
         Pesel pesel = new Pesel(enteredPesel);
         boolean result = pesel.verByPattern();
         verificatinInfo.setVisible(true);
-        if (result){
+        if (result) {
             verificatinInfo.setText("PESEL " + enteredPesel + " poprawny");
             verificatinInfo.setTextFill(Color.GREEN);
-        }else {
+        } else {
             verificatinInfo.setText("PESEL " + enteredPesel + " niepoprawny");
             verificatinInfo.setTextFill(Color.RED);
         }
@@ -44,14 +50,22 @@ public class Controller {
 
 
     public void handleBtnFile() {
+        FileManager fileManager = new FileManager();
         enteringPesel.setVisible(false);
         verificatinInfo.setVisible(false);
+        btnVerify.setVisible(false);
+        verFileInfo.setVisible(true);
+        verFileInfo.setText("Aby zweryfikować dane z pliku, plik powinien znajdować się katalogu: \n " + fileManager.getFileToSave().getAbsolutePath());
+        btnVerFile.setVisible(true);
+        btnVerFile.setOnAction(actionEvent -> handleBtnVerFile()); //obśługa przycisku "weryfikuj" do weryfikowania z pliku
+    }
 
+    public void handleBtnVerFile() {
         FileManager fileManager = new FileManager();
         fileManager.checkFile();
         fileManager.readFile();
-        fileManager.saveFile();
-        System.out.println("sciezka pliku to " + fileManager.getFileToSave().getAbsolutePath());
+        fileManager.saveFile(list); // zapisanie do pliku oraz dodanie wyników do listView
+        list.setVisible(true);
 
     }
 
