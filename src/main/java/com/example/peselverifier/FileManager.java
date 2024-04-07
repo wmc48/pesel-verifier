@@ -11,7 +11,6 @@ public class FileManager {
     private final File fileToVer = new File("do_weryfikacji.txt");
     private final File fileToSave = new File("po_weryfikacji.txt");
     List<String> peselFromFile = new ArrayList<>();// do weryfikacji pliku,
-    private String strPesel;
 
     void checkFile() {
 
@@ -41,7 +40,7 @@ public class FileManager {
         }
     }
 
-    void saveFile(ListView listView) {
+    void saveFile(ListView<String> listView) {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter("po_weryfikacji.txt");
@@ -53,17 +52,19 @@ public class FileManager {
 
         for (String row : peselFromFile) { // pętla pozwala zweryfikować każdą linię pliku
             // a następnie zapisać wynik weryfikacji jako każdy nowy wiersz do pliku, oraz dodać wynik o listy weryfikacji aby wyświetlić to w listView
-            strPesel = row.trim(); // strPesel jako niezbędny argument do metody verificationPesel. w pętli przypisuje do siebie element listy a w następnej itereacji kolejny aż do końca listy
+            String strPesel = row.trim(); // strPesel jako niezbędny argument do metody verificationPesel. w pętli przypisuje do siebie element listy a w następnej itereacji kolejny aż do końca listy
             Pesel pesel = new Pesel(strPesel);
+            Verification verification = new Verification();
             String result;
             if (strPesel.length() > 11) {
                 result = String.format("%-25s| błędny pesel, powód: za długi", strPesel);
                 verificatedList.add(result);
+                writer.println(result);
             } else if (strPesel.length() < 11) {
                 result = String.format("%-25s| błędny pesel, powód: za krótki", strPesel);
                 verificatedList.add(result);
                 writer.println(result);
-            } else if (pesel.verByPattern()) {
+            } else if (verification.verByPattern(pesel.getEnteredPesel())) {
                 result = String.format("%-25s| PESEL poprawny", strPesel);
                 verificatedList.add(result);
                 writer.println(result);

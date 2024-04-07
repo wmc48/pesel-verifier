@@ -1,19 +1,26 @@
 package com.example.peselverifier;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 
 public class Controller {
 
-    private final TextField enteringPesel;
-    private final Button btnVerify, btnFile, btnVerFile;
-    private final Label validTextField, verificatinInfo, verFileInfo;
-    private ListView list;
+    private final TextField enteringPesel, enteringQuantity;
+    private final Button btnVerify, btnFile, btnVerFile, btnChoseGenerate, btnGenerate;
+    private RadioButton btnGenderM, btnGenderF;
+    private Label validTextField, verificatinInfo, verFileInfo, dayOfBirthInfo, generateInfo, quantityInfo, genderInfo;
+    DatePicker datePicker;
+    private final ListView<String> list;
 
-    public Controller(TextField enteringPesel, Button btnVerify, Button btnFile, Label validTextField, Label verificatinInfo, Button btnVerFile, Label verFileInfo, ListView list) {
+
+    public Controller(
+            TextField enteringPesel,
+            Button btnVerify,
+            Button btnFile, Button btnChoseGenerate, Button btnGenerate, RadioButton btnGenderF, RadioButton btnGenderM, Label validTextField,
+            Label verificatinInfo, Button btnVerFile,
+            Label verFileInfo,
+            ListView<String> list,
+            Label dayOfBirthInfo, DatePicker datePicker, Label generateInfo, Label genderInfo, Label quantityInfo, TextField enteringQuantity) {
         this.enteringPesel = enteringPesel;
         this.btnVerify = btnVerify;
         this.btnFile = btnFile;
@@ -22,22 +29,31 @@ public class Controller {
         this.btnVerFile = btnVerFile;
         this.verFileInfo = verFileInfo;
         this.list = list;
-
+        this.btnChoseGenerate = btnChoseGenerate;
+        this.btnGenerate = btnGenerate;
+        this.btnGenderF = btnGenderF;
+        this.btnGenderM = btnGenderM;
+        this.enteringQuantity = enteringQuantity;
+        this.dayOfBirthInfo = dayOfBirthInfo;
+        this.generateInfo = generateInfo;
+        this.genderInfo = genderInfo;
+        this.quantityInfo = quantityInfo;
+        this.datePicker = datePicker;
     }
 
     public void handleBtnByTypping() {// Obsługa kliknięcia przycisku btnByTyping
-        enteringPesel.setVisible(true);
-        btnVerify.setVisible(true);
-        verFileInfo.setVisible(false);
-        btnVerFile.setVisible(false);
-        list.setVisible(false);
         verificationTextField();
+        visibleGenerateInfo(false);
+        visibleFileInfo(false);
+        visibleVerInfo(true);
     }
 
     public void handleBtnVerify() {// Obsługa kliknięcia przycisku BtnVerify
         String enteredPesel = enteringPesel.getText(); // przypisanie do zmiennej tekstu wproadzonego w Label przez usera
         Pesel pesel = new Pesel(enteredPesel);
-        boolean result = pesel.verByPattern();
+        Verification verification = new Verification();
+        boolean result = verification.verByPattern(pesel.getEnteredPesel());
+
         verificatinInfo.setVisible(true);
         if (result) {
             verificatinInfo.setText("PESEL " + enteredPesel + " poprawny");
@@ -51,14 +67,54 @@ public class Controller {
 
     public void handleBtnFile() {
         FileManager fileManager = new FileManager();
-        enteringPesel.setVisible(false);
-        verificatinInfo.setVisible(false);
-        btnVerify.setVisible(false);
-        verFileInfo.setVisible(true);
-        verFileInfo.setText("Aby zweryfikować dane z pliku, plik powinien znajdować się katalogu: \n " + fileManager.getFileToSave().getAbsolutePath());
-        btnVerFile.setVisible(true);
-        btnVerFile.setOnAction(actionEvent -> handleBtnVerFile()); //obśługa przycisku "weryfikuj" do weryfikowania z pliku
+        visibleGenerateInfo(false);
+        visibleVerInfo(false);
+        visibleFileInfo(true);
+
+        verFileInfo.setText("Aby zweryfikować dane z pliku, plik powinien znajdować się katalogu: \n " +
+                fileManager.getFileToSave().getAbsolutePath());
+
+        btnVerFile.setOnAction(actionEvent -> handleBtnVerFile());//obśługa przycisku "weryfikuj" do weryfikowania z pliku
+
     }
+
+    public void handleBtnChoseGenerate() {
+        visibleVerInfo(false);
+        visibleGenerateInfo(true);
+        visibleFileInfo(false);
+
+        Generator generator = new Generator();
+        System.out.println(generator.generate(20, 11, 1995));
+
+    }
+
+    private void visibleGenerateInfo(boolean visible) {
+        btnGenerate.setVisible(visible);
+        btnGenderF.setVisible(visible);
+        btnGenderM.setVisible(visible);
+        dayOfBirthInfo.setVisible(visible);
+        datePicker.setVisible(visible);
+        generateInfo.setVisible(visible);
+        genderInfo.setVisible(visible);
+        quantityInfo.setVisible(visible);
+        enteringQuantity.setVisible(visible);
+        validTextField.setVisible(false);
+    }
+
+    private void visibleFileInfo(boolean visible) {
+        verFileInfo.setVisible(visible);
+        btnVerFile.setVisible(visible);
+        list.setVisible(visible);
+        validTextField.setVisible(false);
+    }
+
+    private void visibleVerInfo(boolean visible) {
+        enteringPesel.setVisible(visible);
+        verificatinInfo.setVisible(visible);
+        btnVerify.setVisible(visible);
+        validTextField.setVisible(false);
+    }
+
 
     public void handleBtnVerFile() {
         FileManager fileManager = new FileManager();
@@ -66,11 +122,11 @@ public class Controller {
         fileManager.readFile();
         fileManager.saveFile(list); // zapisanie do pliku oraz dodanie wyników do listView
         list.setVisible(true);
-
     }
 
     public void verificationTextField() {
         enteringPesel.textProperty().addListener((observable, oldValue, newValue) -> {
+
             if (newValue.length() < 11) {
                 btnVerify.setDisable(true);
                 validTextField.setVisible(true);
