@@ -8,7 +8,7 @@ public class Pesel {
         this.enteredPesel = enteredPesel;
     }
 
-    public StringBuilder getEnteredPesel() {
-        return new StringBuilder(enteredPesel);
+    public String getEnteredPesel() {
+        return enteredPesel;
     }
 }

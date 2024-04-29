@@ -1,4 +1,34 @@
-95112027339              | PESEL poprawny
-951120262916             | błędny pesel, powód: za długi
-95112046174              | PESEL poprawny
-22222222221              | błędny pesel
+2222222222               | błędny pesel, powód: za krótki
+6326620262916            | błędny pesel, powód: za długi
+45646545641              | błędny pesel
+2222222222               | błędny pesel, powód: za krótki
+z                        | błędny pesel, powód: za krótki
+wygenerowane:            | błędny pesel, powód: za długi
+76092032973              | PESEL poprawny
+65080847521              | PESEL poprawny
+68042318189              | PESEL poprawny
+17010689059              | PESEL poprawny
+24042465542              | PESEL poprawny
+24042471503              | PESEL poprawny
+24042462921              | PESEL poprawny
+24042457053              | PESEL poprawny
+32041422222              | PESEL poprawny
+93122776940              | PESEL poprawny
+49052460510              | PESEL poprawny
+73111511334              | PESEL poprawny
+87072091844              | PESEL poprawny
+45032869883              | PESEL poprawny
+89110852057              | PESEL poprawny
+80070338656              | PESEL poprawny
+75102073195              | PESEL poprawny
+78081139759              | PESEL poprawny
+34110466148              | PESEL poprawny
+66052232103              | PESEL poprawny
+10070157029              | PESEL poprawny
+70112071380              | PESEL poprawny
+07060419456              | PESEL poprawny
+46040989602              | PESEL poprawny
+14080128020              | PESEL poprawny
+75030557015              | PESEL poprawny
+96051325580              | PESEL poprawny
+87091798478              | PESEL poprawny

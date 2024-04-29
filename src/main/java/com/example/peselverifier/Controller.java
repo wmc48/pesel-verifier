@@ -3,6 +3,11 @@ package com.example.peselverifier;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class Controller {
 
     private final TextField enteringPesel, enteringQuantity;
@@ -64,6 +69,16 @@ public class Controller {
         }
     }
 
+    public void handleBtnGenerate(){
+
+        LocalDate getDate = datePicker.getValue();
+
+        int quantity = Integer.parseInt(enteringQuantity.getText());
+
+        Generator generator = new Generator();
+        generator.generatedList(quantity, getDate, list);
+
+        }
 
     public void handleBtnFile() {
         FileManager fileManager = new FileManager();
@@ -80,11 +95,9 @@ public class Controller {
 
     public void handleBtnChoseGenerate() {
         visibleVerInfo(false);
-        visibleGenerateInfo(true);
         visibleFileInfo(false);
-
-        Generator generator = new Generator();
-        System.out.println(generator.generate(20, 11, 1995));
+        list.getItems().clear();
+        visibleGenerateInfo(true);
 
     }
 
@@ -98,12 +111,16 @@ public class Controller {
         genderInfo.setVisible(visible);
         quantityInfo.setVisible(visible);
         enteringQuantity.setVisible(visible);
+        list.setVisible(visible);
+
+
         validTextField.setVisible(false);
     }
 
     private void visibleFileInfo(boolean visible) {
         verFileInfo.setVisible(visible);
         btnVerFile.setVisible(visible);
+        list.getItems().clear();
         list.setVisible(visible);
         validTextField.setVisible(false);
     }

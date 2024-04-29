@@ -25,6 +25,8 @@ public class VisualFrame extends Application {
         datePicker = new DatePicker();
         datePicker.setLayoutX(20);
         datePicker.setLayoutY(130);
+        datePicker.setVisible(false);
+
 
         //Labels ****************************
         startInfo = new Label("Wybierz, co chcesz zrobić:");
@@ -38,6 +40,7 @@ public class VisualFrame extends Application {
         generateInfo = new Label("uzupełnij dane aby wygenerować pesel");
         generateInfo.setLayoutX(150);
         generateInfo.setLayoutY(90);
+        generateInfo.setVisible(false);
 
         validTextField = new Label();
         validTextField.setLayoutX(270);
@@ -53,14 +56,17 @@ public class VisualFrame extends Application {
         dayOfBirthInfo = new Label("Data urodzin:");
         dayOfBirthInfo.setLayoutX(20);
         dayOfBirthInfo.setLayoutY(110);
+        dayOfBirthInfo.setVisible(false);
 
         genderInfo = new Label("Płeć:");
         genderInfo.setLayoutX(230);
         genderInfo.setLayoutY(110);
+        genderInfo.setVisible(false);
 
         quantityInfo = new Label("Ilość numerów do wygenerowania:");
         quantityInfo.setLayoutX(20);
         quantityInfo.setLayoutY(180);
+        quantityInfo.setVisible(false);
 
         //Buttons
         //btnByTyping
@@ -90,22 +96,23 @@ public class VisualFrame extends Application {
         btnGenerate = new Button("Generuj");
         btnGenerate.setLayoutX(280);
         btnGenerate.setLayoutY(180);
-        btnGenerate.setVisible(true);
+        btnGenerate.setVisible(false);
 
         btnGenderM = new RadioButton("Mężczyzna");
         btnGenderM.setLayoutX(230);
         btnGenderM.setLayoutY(130);
-
+        btnGenderM.setVisible(false);
         btnGenderF = new RadioButton("Kobieta");
         btnGenderF.setLayoutX(230);
         btnGenderF.setLayoutY(150);
+        btnGenderF.setVisible(false);
 
         //list
         list = new ListView<String>();
         list.setPrefWidth(450);
         list.setPrefHeight(200);
         list.setLayoutX(40);
-        list.setLayoutY(160);
+        list.setLayoutY(220);
         list.setVisible(false);
 
         //TextFiled
@@ -119,6 +126,7 @@ public class VisualFrame extends Application {
         enteringQuantity.setLayoutX(210);
         enteringQuantity.setLayoutY(180);
         enteringQuantity.setPrefColumnCount(4);
+        enteringQuantity.setVisible(false);
 
         Controller controller = new Controller(
                 enteringPesel,
@@ -144,6 +152,7 @@ public class VisualFrame extends Application {
         btnVerify.setOnAction(event -> controller.handleBtnVerify());
         btnFile.setOnAction(actionEvent -> controller.handleBtnFile());
         btnChoseGenerate.setOnAction(actionEvent -> controller.handleBtnChoseGenerate());
+        btnGenerate.setOnAction(event -> controller.handleBtnGenerate());
 
         Group group = new Group();
         group.getChildren().add(startInfo);

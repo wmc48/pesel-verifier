@@ -4,7 +4,7 @@ public abstract class PeselInfo {
 
     int[] weight = {1, 3, 7, 9, 1, 3, 7, 9, 1, 3};
 
-    int controlDigitCalculate(StringBuilder peselNumber, int peselLength){
+    int controlDigitCalculate(String peselNumber, int peselLength){
         //przekazujemy rożną długośc numeru PESEL w zależności czy sprawdzamy czy dopiero generujemy
         int checkDigitSum = 0; // suma kontrolna
         for (int i = 0; i < peselLength; i++) {
